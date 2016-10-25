@@ -91,6 +91,6 @@ class Cursor
   def update_pos(diff)
     @cursor_pos[0] += diff[0]
     @cursor_pos[1] += diff[1]
-    @cursor_pos.map! { |pos| pos %= 8 }
+    @cursor_pos.map! { |pos| pos %= 8 } #### return copy of @cursor_pos
   end
 end
