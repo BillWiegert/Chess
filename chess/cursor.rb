@@ -47,30 +47,19 @@ class Cursor
   private
 
   def read_char
-    STDIN.echo = false # stops the console from printing return values
+    STDIN.echo = false
 
-    STDIN.raw! # in raw mode data is given as is to the program--the system
-                 # doesn't preprocess special characters such as control-c
+    STDIN.raw!
 
-    input = STDIN.getc.chr # STDIN.getc reads a one-character string as a
-                             # numeric keycode. chr returns a string of the
-                             # character represented by the keycode.
-                             # (e.g. 65.chr => "A")
+    input = STDIN.getc.chr
 
     if input == "\e" then
-      input << STDIN.read_nonblock(3) rescue nil # read_nonblock(maxlen) reads
-                                                   # at most maxlen bytes from a
-                                                   # data stream; it's nonblocking,
-                                                   # meaning the method executes
-                                                   # asynchronously; it raises an
-                                                   # error if no data is available,
-                                                   # hence the need for rescue
-
+      input << STDIN.read_nonblock(3) rescue nil
       input << STDIN.read_nonblock(2) rescue nil
     end
 
-    STDIN.echo = true # the console prints return values again
-    STDIN.cooked! # the opposite of raw mode :)
+    STDIN.echo = true
+    STDIN.cooked!
 
     return input
   end
@@ -91,6 +80,6 @@ class Cursor
   def update_pos(diff)
     @cursor_pos[0] += diff[0]
     @cursor_pos[1] += diff[1]
-    @cursor_pos.map! { |pos| pos %= 8 } #### return copy of @cursor_pos
+    @cursor_pos.map! { |pos| pos %= 8 } 
   end
 end

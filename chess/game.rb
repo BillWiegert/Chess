@@ -34,12 +34,13 @@ class Game
 
   def respond_to_input(key_press)
     unless key_press.nil?
+      origin = key_press.dup
+      @display.selected = origin
       puts "Where would you like to move it?"
-      debugger
       new_position = move_cursor
-
-      @board[new_position] = @board[key_press]
-      @board[key_press] = NullPiece.new(:nil, @board)
+      @board[new_position] = @board[origin]
+      @board[origin] = NullPiece.new(:nil, @board)
+      @display.selected = nil
       @board.update_positions
     end
   end
@@ -55,25 +56,8 @@ class Game
 
 end
 
-
-
-
-
 board = board = Board.new
-cursor = Cursor.new([4,4], board)
+cursor = Cursor.new([3,3], board)
 display = Display.new(board, cursor)
 game = Game.new(display, cursor, board)
 game.run
-# bobby = Rook.new(:black, board)
-# ronny = Bishop.new(:white, board)
-# board[[3,3]] = bobby
-# board[[5,7]] = ronny
-# board.update_positions
-# display.render
-# # run(display, cursor)
-# puts "bobby rook"
-# p bobby.position
-# p bobby.moves
-# puts "ronny bishop"
-# p ronny.position
-# p ronny.moves

@@ -1,4 +1,3 @@
-
 require "colorize"
 
 class Display
@@ -7,10 +6,15 @@ class Display
     @board = board
     @grid = board.grid
     @cursor = cursor
+    @selected = nil
   end
 
   def inspect
     "Display =>"
+  end
+
+  def selected=(selected)
+    @selected = selected
   end
 
   def render
@@ -21,9 +25,11 @@ class Display
     @grid.each_with_index do |row, x_index|
       row.each_with_index do |cell, y_index|
         if @cursor.cursor_pos == [x_index, y_index]
-          print " #{cell.to_s} ".colorize(:background => :red)
+          print " #{cell.to_s} ".colorize(background: :red)
+        elsif @selected == [x_index, y_index]
+          print " #{cell.to_s} ".colorize(background: :yellow)
         else
-          print " #{cell.to_s} ".colorize(:background => checker(count))
+          print " #{cell.to_s} ".colorize(background: checker(count))
         end
         count += 1
       end

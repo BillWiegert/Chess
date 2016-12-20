@@ -36,8 +36,10 @@ class Board
   def move_piece!(from_pos, to_pos)
   end
 
-  # def checkmate?
-  # end
+  def checkmate?
+    
+  end
+
   def update_positions
     @grid.each_with_index do |row, y_index|
       row.each_with_index do |piece, x_index|
