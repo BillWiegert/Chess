@@ -3,7 +3,7 @@ require_relative 'sliding_module'
 
 class Bishop < Piece
   include SlidingPiece
-  def initialize(color, board)
+  def initialize(color, board, pos = nil)
     @symbol = define_symbol("♝")
     super(color, board)
   end

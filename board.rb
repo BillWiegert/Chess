@@ -5,9 +5,7 @@ class Board
   attr_reader :grid
 
   def initialize(fill = true)
-    if fill
-      make_starting_grid
-    end
+    make_starting_grid(fill)
   end
 
   def [](pos)
@@ -34,10 +32,12 @@ class Board
 
   def dup
     new_board = Board.new(false)
-
     pieces.each do |piece|
-      piece.class.new(piece.color, new_board, piece.pos)
+      new_piece = piece.class.new(piece.color, new_board, piece.pos)
+      new_board[piece.pos] = new_piece
     end
+
+    new_board.update_positions
 
     new_board
   end
@@ -97,17 +97,20 @@ class Board
     king_pos || (raise 'king not found?')
   end
 
-  def make_starting_grid
+  def make_starting_grid(fill)
     @grid = Array.new(8) { Array.new(8) }
 
-    @grid[0] = kings_row(:black)
-    @grid[1] = pawn_row(:black)
-    @grid[6] = pawn_row(:white)
-    @grid[7] = kings_row(:white)
-
-    @grid[2..5].map! do |row|
+    @grid[0..7].map! do |row|
       row.map! { |cell| cell = NullPiece.new(:nil, self) }
     end
+
+    if fill
+      @grid[0] = kings_row(:black)
+      @grid[1] = pawn_row(:black)
+      @grid[6] = pawn_row(:white)
+      @grid[7] = kings_row(:white)
+    end
+
     update_positions
   end
 

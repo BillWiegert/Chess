@@ -3,7 +3,7 @@ require_relative 'sliding_module'
 
 class Rook < Piece
   include SlidingPiece
-  def initialize(color = :nil, board)
+  def initialize(color, board, pos = nil)
     @symbol = define_symbol("♜")
     super(color, board)
   end

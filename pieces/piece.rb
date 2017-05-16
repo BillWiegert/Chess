@@ -7,10 +7,11 @@ class Piece
 
   attr_reader :symbol, :pos, :color, :board
 
-  def initialize(color, board)
+  def initialize(color, board, pos = nil)
     check_color(color)
     @color = color
     @board = board
+    @pos = pos
   end
 
   def inspect
@@ -34,15 +35,20 @@ class Piece
   end
 
   def valid_moves
-    moves.select do |move|
+    valid = moves.select do |move|
       move.all? { |coordinate| coordinate.between?(0,7) } &&
       (@board[move].empty? || @board[move].color != self.color)
     end
+    
+    valid.reject { |pos| move_into_check?(pos) }
   end
 
   private
 
-  def move_into_check(to_pos)
+  def move_into_check?(to_pos)
+    test_board = board.dup
+    test_board.move_piece!(pos, to_pos)
+    test_board.in_check?(color)
   end
 
   def define_symbol(sym)

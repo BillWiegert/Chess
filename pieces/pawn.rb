@@ -3,7 +3,7 @@ require_relative 'stepping_module'
 
 class Pawn < Piece
   include SteppingPiece
-  def initialize(color, board)
+  def initialize(color, board, pos = nil)
     @symbol = define_symbol("♟")
     super(color, board)
   end
