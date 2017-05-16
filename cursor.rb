@@ -67,7 +67,7 @@ class Cursor
   def handle_key(key)
     case key
     when :return, :space
-      return @cursor_pos
+      return @cursor_pos.dup
     when :left, :right, :up, :down
       update_pos(MOVES[key])
     when :ctrl_c
@@ -80,6 +80,6 @@ class Cursor
   def update_pos(diff)
     @cursor_pos[0] += diff[0]
     @cursor_pos[1] += diff[1]
-    @cursor_pos.map! { |pos| pos %= 8 } 
+    @cursor_pos.map! { |pos| pos %= 8 }
   end
 end

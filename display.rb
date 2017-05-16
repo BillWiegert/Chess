@@ -2,10 +2,13 @@ require "colorize"
 
 class Display
 
+  attr_reader :notifications, :cursor
+
   def initialize(board, cursor)
     @board = board
     @grid = board.grid
     @cursor = cursor
+    @notifications = {}
     @selected = nil
   end
 
@@ -13,7 +16,7 @@ class Display
     "Display =>"
   end
 
-  def selected=(selected)
+  def selected=(selected = nil)
     @selected = selected
   end
 
@@ -21,7 +24,7 @@ class Display
     @grid.flatten.each
     count = 0
     line  = 0
-    puts " 0  1  2  3  4  5  6  7"
+    puts " A  B  C  D  E  F  G  H"
     @grid.each_with_index do |row, x_index|
       row.each_with_index do |cell, y_index|
         if @cursor.cursor_pos == [x_index, y_index]
@@ -38,6 +41,10 @@ class Display
       puts ""
       count += 1
     end
+
+    @notifications.each do |key, val|
+      puts "#{val}"
+    end
   end
 
   def checker(num)
@@ -46,5 +53,17 @@ class Display
     else
       :blue
     end
+  end
+
+  def reset!
+    @notifications.delete(:error)
+  end
+
+  def uncheck!
+    @notifications.delete(:check)
+  end
+
+  def set_check!
+    @notifications[:check] = "Check!"
   end
 end
