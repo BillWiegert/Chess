@@ -34,6 +34,7 @@ class Game
       end
     end
 
+    system "clear"
     display.render
     puts "#{current_player} is checkmated."
 
