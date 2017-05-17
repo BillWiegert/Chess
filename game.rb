@@ -1,7 +1,6 @@
 require_relative "board.rb"
 require_relative "pieces.rb"
 require_relative "display.rb"
-require "byebug"
 require_relative "cursor.rb"
 require_relative "human_player.rb"
 

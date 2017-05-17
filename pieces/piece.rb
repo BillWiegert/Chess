@@ -1,7 +1,7 @@
 require 'colorize'
 require_relative 'stepping_module'
 require_relative 'sliding_module'
-require "byebug"
+
 
 class Piece
 
@@ -35,12 +35,12 @@ class Piece
   end
 
   def valid_moves
-    valid = moves.select do |move|
-      move.all? { |coordinate| coordinate.between?(0,7) } &&
-      (@board[move].empty? || @board[move].color != self.color)
-    end
-    
-    valid.reject { |pos| move_into_check?(pos) }
+    # valid = moves.select do |move|
+    #   board.valid_pos?(move) &&
+    #   (@board[move].empty? || @board[move].color != self.color)
+    # end
+
+    moves.reject { |pos| move_into_check?(pos) }
   end
 
   private

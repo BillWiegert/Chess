@@ -46,10 +46,11 @@ class Board
     raise "There is no piece there!" if empty?(from_pos)
 
     piece = self[from_pos]
+
     if piece.color != turn_color
-      raise "You must move your own pieces"
+      raise "That is not your piece"
     elsif !piece.moves.include?(to_pos)
-      raise 'Piece does not move like that'
+      raise 'Invalid move'
     elsif !piece.valid_moves.include?(to_pos)
       raise 'You cannot move into check'
     end

@@ -1,10 +1,15 @@
 module SteppingPiece
 
   def moves
-    move_dirs.map do |step|
+    moves = []
+
+    move_dirs.each do |step|
       step[0] += @pos[0]
       step[1] += @pos[1]
-      step
+      moves << step if board.valid_pos?(step) &&
+      (board.empty?(step) || board[step].color != color)
     end
+
+    moves
   end
 end
