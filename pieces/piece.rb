@@ -15,7 +15,7 @@ class Piece
   end
 
   def inspect
-    "Piece => #{@color}, => #{@symbol}"
+    "Piece => #{@color} #{self.class} @ #{@pos}"
   end
 
   def get_pos(pos)

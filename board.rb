@@ -56,6 +56,10 @@ class Board
     end
 
     self.move_piece!(from_pos, to_pos)
+
+    if piece.class == Rook || piece.class == King
+      piece.can_castle = false
+    end
   end
 
   def move_piece!(from_pos, to_pos)
