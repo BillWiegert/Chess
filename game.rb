@@ -22,7 +22,7 @@ class Game
       begin
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
-        display.last_move = end_pos
+        display.last_move = [start_pos, end_pos]
 
         swap_turn!
         notify_players
