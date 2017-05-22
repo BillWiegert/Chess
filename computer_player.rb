@@ -13,9 +13,12 @@ class ComputerPlayer < Player
     "King" => 10
   }
 
+  MIN_MOVE_TIME = 0.5 # minimum computing time for one move
+
   attr_reader :board
 
   def make_move(board)
+    start_time = Time.now.to_i
     @board = board
     system "clear"
     display.render
@@ -43,14 +46,17 @@ class ComputerPlayer < Player
         end
       end
 
-      return [attacker.pos, most_valuable.pos]
+      start_pos, end_pos = attacker.pos, most_valuable.pos
+    else
+      piece_to_move = movable_pieces[rand(movable_pieces.length)]
+      start_pos = piece_to_move.pos
+
+      possible_moves = piece_to_move.valid_moves
+      end_pos = possible_moves[rand(possible_moves.length)]
     end
 
-    piece_to_move = movable_pieces[rand(movable_pieces.length)]
-    start_pos = piece_to_move.pos
-
-    possible_moves = piece_to_move.valid_moves
-    end_pos = possible_moves[rand(possible_moves.length)]
+    remaining_time = MIN_MOVE_TIME - (Time.now.to_i - start_time)
+    sleep(remaining_time) if remaining_time > 0
 
     [start_pos, end_pos]
   end
