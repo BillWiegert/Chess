@@ -34,7 +34,7 @@ class Cursor
 
   attr_reader :cursor_pos, :board
 
-  def initialize(cursor_pos, board)
+  def initialize(board, cursor_pos = [3,3])
     @cursor_pos = cursor_pos
     @board = board
   end

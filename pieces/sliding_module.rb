@@ -26,13 +26,13 @@ module SlidingPiece
     moves = []
 
     move_dirs.each do |dx, dy|
-      moves.concat(grow_unblocked_moves_in_dir(dx, dy))
+      moves.concat(find_moves_in_dir(dx, dy))
     end
 
     moves
   end
 
-  def grow_unblocked_moves_in_dir(dx, dy)
+  def find_moves_in_dir(dx, dy)
     cur_x, cur_y = pos
     moves = []
     loop do
@@ -48,6 +48,7 @@ module SlidingPiece
         break
       end
     end
+    
     moves
   end
 

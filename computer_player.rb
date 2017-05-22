@@ -1,0 +1,95 @@
+require_relative 'display.rb'
+require_relative 'player.rb'
+require 'byebug'
+
+class ComputerPlayer < Player
+
+  VALUES = {
+    "Pawn" => 1,
+    "Knight" => 3,
+    "Bishop" => 3,
+    "Rook" => 5,
+    "Queen" => 9,
+    "King" => 10
+  }
+
+  attr_reader :board
+
+  def make_move(board)
+    @board = board
+    system "clear"
+    display.render
+
+    capturable = capturable_pieces
+
+    if capturable.length > 0
+      most_valuable = capturable.first
+
+      capturable[1..-1].each do |piece|
+        if piece_value(piece) > piece_value(most_valuable)
+          most_valuable = piece
+        end
+      end
+
+      attackers = movable_pieces.select do |piece|
+        piece.valid_moves.any? { |move| move == most_valuable.pos }
+      end
+
+      attacker = attackers.first
+
+      attackers[1..-1].each do |piece|
+        if piece_value(piece) < piece_value(attacker)
+          attacker = piece
+        end
+      end
+
+      return [attacker.pos, most_valuable.pos]
+    end
+
+    piece_to_move = movable_pieces[rand(movable_pieces.length)]
+    start_pos = piece_to_move.pos
+
+    possible_moves = piece_to_move.valid_moves
+    end_pos = possible_moves[rand(possible_moves.length)]
+
+    [start_pos, end_pos]
+  end
+
+  private
+
+  def my_pieces()
+    board.pieces.select { |piece| piece.color == color }
+  end
+
+  def movable_pieces()
+    my_pieces.select { |piece| piece.valid_moves.length > 0 }
+  end
+
+  def enemy_pieces()
+    board.pieces.select { |piece| piece.color != color }
+  end
+
+  def capturable_pieces()
+    enemy_pieces.select do |enemy_piece|
+      movable_pieces.any? do |my_piece|
+        my_piece.valid_moves.any? do |move|
+          move == enemy_piece.pos
+        end
+      end
+    end
+  end
+
+  def threatened_pieces()
+    my_pieces.select do |my_piece|
+      enemy_pieces.any? do |enemy_piece|
+        enemy_piece.valid_moves.any? do |move|
+          move == my_piece.pos
+        end
+      end
+    end
+  end
+
+  def piece_value(piece)
+    VALUES[piece.class.to_s]
+  end
+end

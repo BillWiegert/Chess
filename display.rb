@@ -1,15 +1,17 @@
 require "colorize"
+require_relative "cursor"
 
 class Display
 
   attr_reader :notifications, :cursor
 
-  def initialize(board, cursor)
+  def initialize(board)
     @board = board
     @grid = board.grid
-    @cursor = cursor
+    @cursor = Cursor.new(board)
     @notifications = {}
     @selected = nil
+    @last_move = nil
   end
 
   def inspect
@@ -18,6 +20,10 @@ class Display
 
   def selected=(selected = nil)
     @selected = selected
+  end
+
+  def last_move=(last_move = nil)
+    @last_move = last_move
   end
 
   def render
@@ -30,6 +36,8 @@ class Display
         if @cursor.cursor_pos == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :red)
         elsif @selected == [x_index, y_index]
+          print " #{cell.to_s} ".colorize(background: :green)
+        elsif @last_move == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :yellow)
         else
           print " #{cell.to_s} ".colorize(background: checker(count))

@@ -1,20 +1,18 @@
 require_relative "board.rb"
-require_relative "pieces.rb"
 require_relative "display.rb"
-require_relative "cursor.rb"
 require_relative "human_player.rb"
+require_relative "computer_player.rb"
 
 class Game
 
   attr_reader :board, :display, :players, :current_player
 
-  def initialize(display, cursor, board)
-    @display = display
-    @cursor = cursor
-    @board = board
+  def initialize(player1, player2)
+    @board = Board.new
+    @display = Display.new(@board)
     @players = {
-      white: HumanPlayer.new(:white, @display),
-      black: HumanPlayer.new(:black, @display)
+      white: player1 == :human ? HumanPlayer.new(:white, @display) : ComputerPlayer.new(:white, @display),
+      black: player2 == :human ? HumanPlayer.new(:black, @display) : ComputerPlayer.new(:black, @display)
     }
     @current_player = :white
   end
@@ -24,6 +22,7 @@ class Game
       begin
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
+        display.last_move = end_pos
 
         swap_turn!
         notify_players
@@ -53,33 +52,14 @@ class Game
   def swap_turn!
     current_player == :white ? @current_player = :black : @current_player = :white
   end
-
-  def respond_to_input(key_press)
-    unless key_press.nil?
-      origin = key_press.dup
-      display.selected = origin
-      puts "Where would you like to move it?"
-      new_position = move_cursor
-      display.selected = nil
-      @board.move_piece(current_player, origin, new_position)
-      swap_turn!
-    end
-  end
-
-  def move_cursor
-    input = @cursor.get_input
-    print input
-    return input unless input.nil?
-    system "clear"
-    display.render
-    puts "#{current_player.to_s}'s move."
-    move_cursor
-  end
-
 end
 
-board = board = Board.new
-cursor = Cursor.new([3,3], board)
-display = Display.new(board, cursor)
-game = Game.new(display, cursor, board)
-game.play
+if __FILE__ == $PROGRAM_NAME
+  puts("White player human? (Y/N)")
+  white = gets.chomp.downcase == "y" ? :human : :computer
+
+  puts("Black player human? (Y/N)")
+  black = gets.chomp.downcase == "y" ? :human : :computer
+
+  Game.new(white, black).play
+end

@@ -35,11 +35,6 @@ class Piece
   end
 
   def valid_moves
-    # valid = moves.select do |move|
-    #   board.valid_pos?(move) &&
-    #   (@board[move].empty? || @board[move].color != self.color)
-    # end
-
     moves.reject { |pos| move_into_check?(pos) }
   end
 
