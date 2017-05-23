@@ -25,7 +25,7 @@ class King < Piece
 
     if side == :queen
       rook = board[[pos[0], 0]]
-      castle_path = [[pos[0], 1], [pos[0], 2], [pos[0], 3]]
+      castle_path = [[pos[0], 2], [pos[0], 3]]
     elsif side == :king
       rook = board[[pos[0], 7]]
       castle_path = [[pos[0], 5], [pos[0], 6]]
