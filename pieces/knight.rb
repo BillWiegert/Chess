@@ -5,7 +5,7 @@ class Knight < Piece
   include SteppingPiece
   def initialize(color, board, pos = nil)
     @symbol = define_symbol("♞")
-    super(color, board)
+    super(color, board, pos)
   end
 
   def move_dirs

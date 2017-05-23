@@ -37,8 +37,6 @@ class Board
       new_board[piece.pos] = new_piece
     end
 
-    new_board.update_positions
-
     new_board
   end
 
@@ -64,7 +62,7 @@ class Board
 
   def move_piece!(from_pos, to_pos)
     self[to_pos] = self[from_pos]
-    self[from_pos] = NullPiece.new(:nil, self)
+    self[from_pos] = NullPiece.new(:nil, self, from_pos)
     self[to_pos].pos = to_pos
   end
 

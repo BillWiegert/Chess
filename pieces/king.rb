@@ -9,7 +9,7 @@ class King < Piece
   def initialize(color, board, pos = nil)
     @symbol = define_symbol("♚")
     @can_castle = true
-    super(color, board)
+    super(color, board, pos)
   end
 
   def move_dirs
