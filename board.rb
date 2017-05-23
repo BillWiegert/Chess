@@ -58,6 +58,20 @@ class Board
     if piece.class == Rook || piece.class == King
       piece.can_castle = false
     end
+
+    # If King moved two spaces move Rook to complete castle
+    if piece.class == King && (from_pos[1] - to_pos[1]) % 2 == 0
+      if from_pos[1] - to_pos[1] == 2
+        # Left Rook
+        rook_pos = [from_pos[0], 0]
+        dest_pos = [from_pos[0], 3]
+      else
+        # Right Rook
+        rook_pos = [from_pos[0], 7]
+        dest_pos = [from_pos[0], 5]
+      end
+      move_piece!(rook_pos, dest_pos)
+    end
   end
 
   def move_piece!(from_pos, to_pos)
