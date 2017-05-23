@@ -5,7 +5,8 @@ require_relative 'sliding_module'
 
 class Piece
 
-  attr_reader :symbol, :pos, :color, :board
+  attr_reader :symbol, :color, :board
+  attr_accessor :pos
 
   def initialize(color, board, pos = nil)
     check_color(color)
@@ -16,10 +17,6 @@ class Piece
 
   def inspect
     "Piece => #{@color} #{self.class} @ #{@pos}"
-  end
-
-  def get_pos(pos)
-    @pos = pos
   end
 
   def to_s
