@@ -27,8 +27,8 @@ class Display
   def render
     @grid.flatten.each
     count = 0
-    line  = 0
-    
+    line  = 1
+
     puts " A  B  C  D  E  F  G  H"
     @grid.each_with_index do |row, x_index|
       row.each_with_index do |cell, y_index|
