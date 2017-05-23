@@ -78,9 +78,37 @@ class Board
   def checkmate?(color)
     return false unless in_check?(color)
 
-    pieces.select { |p| p.color == color }.all? do |piece|
+    get_pieces(color).all? do |piece|
       piece.valid_moves.empty?
     end
+  end
+
+  # insufficient material for checkmate or no valid moves
+  # king versus king
+  # king and bishop versus king
+  # king and knight versus king
+  # king and bishop vs king and bishop with bishops on same square
+  def stalemate?(color)
+    my_pieces = get_pieces(color)
+    return true if my_pieces.all? { |p| p.valid_moves.empty? }
+
+    enemy_pieces = get_pieces(opp_color(color))
+
+    if my_pieces.length == 1
+      if enemy_pieces.length == 1
+        return true
+      end
+
+      if enemy_pieces.length == 2 &&
+        enemy_pieces.any? do |piece|
+          piece.class == Bishop || piece.class == Knight
+        end
+
+        return true
+      end
+    end
+
+    false
   end
 
   def valid_pos?(pos)
@@ -95,7 +123,15 @@ class Board
     end
   end
 
-  protected
+  private
+
+  def get_pieces(color)
+    pieces.select { |p| p.color == color }
+  end
+
+  def opp_color(color)
+    color == :white ? :black : :white
+  end
 
   def find_king(color)
     king_pos = pieces.find { |p| p.color == color && p.is_a?(King) }
