@@ -11,4 +11,9 @@ class Bishop < Piece
   def move_dirs
     diagonal
   end
+
+  def square_color
+    raise "Bishop has no position" unless pos
+    pos[0] + pos[1] % 2 == 0 ? :white : :black
+  end
 end

@@ -65,7 +65,7 @@ class Board
   def move_piece!(from_pos, to_pos)
     self[to_pos] = self[from_pos]
     self[from_pos] = NullPiece.new(:nil, self)
-    self.update_positions
+    self[to_pos].pos = to_pos
   end
 
   def in_check?(color)
@@ -83,11 +83,6 @@ class Board
     end
   end
 
-  # insufficient material for checkmate or no valid moves
-  # king versus king
-  # king and bishop versus king
-  # king and knight versus king
-  # king and bishop vs king and bishop with bishops on same square
   def stalemate?(color)
     my_pieces = get_pieces(color)
     return true if my_pieces.all? { |p| p.valid_moves.empty? }
@@ -95,15 +90,27 @@ class Board
     enemy_pieces = get_pieces(opp_color(color))
 
     if my_pieces.length == 1
+      # King vs King
       if enemy_pieces.length == 1
         return true
       end
 
-      if enemy_pieces.length == 2 &&
-        enemy_pieces.any? do |piece|
+      # King vs King and (Bishop or Knight)
+      if enemy_pieces.length == 2
+        return true if enemy_pieces.any? do |piece|
           piece.class == Bishop || piece.class == Knight
         end
+      end
+    end
 
+
+    # If all pieces are either Kings or Bishops
+    if pieces.all? { |p| p.class == King || p.class == Bishop }
+      bishops = pieces.select { |p| p.class == Bishop }
+      first_square_color = bishops.first.square_color
+
+      # If all bishops are on the same color square
+      if bishops[1..-1].all? { |b| b.square_color == first_square_color }
         return true
       end
     end
@@ -118,7 +125,7 @@ class Board
   def update_positions
     @grid.each_with_index do |row, y_index|
       row.each_with_index do |piece, x_index|
-        piece.get_pos([y_index, x_index])
+        piece.pos = [y_index, x_index]
       end
     end
   end
