@@ -27,7 +27,7 @@ class Display
   def render
     @grid.flatten.each
     count = 0
-    line  = 1
+    line  = 8
 
     puts " A  B  C  D  E  F  G  H"
     @grid.each_with_index do |row, x_index|
@@ -46,7 +46,7 @@ class Display
         count += 1
       end
       print " #{line}"
-      line += 1
+      line -= 1
       puts ""
       count += 1
     end
