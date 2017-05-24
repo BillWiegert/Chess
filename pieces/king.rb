@@ -36,6 +36,7 @@ class King < Piece
     return false unless rook.class == Rook && rook.can_castle
     return false unless castle_path.all? { |path_pos| board.empty?(path_pos) }
     castle_path << pos
+    
     return false if castle_path.any? do |path_pos|
       board.pieces.any? do |p|
         next if p.class == King && p.can_castle

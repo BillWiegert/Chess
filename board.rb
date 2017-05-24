@@ -6,6 +6,7 @@ class Board
 
   def initialize(fill = true)
     make_starting_grid(fill)
+    @pending_promotion = false
   end
 
   def [](pos)
@@ -72,12 +73,21 @@ class Board
       end
       move_piece!(rook_pos, dest_pos)
     end
+
+    if piece.class == Pawn && piece.promotion_row == to_pos[0]
+      promote_pawn(to_pos)
+    end
   end
 
   def move_piece!(from_pos, to_pos)
     self[to_pos] = self[from_pos]
     self[from_pos] = NullPiece.new(:nil, self, from_pos)
     self[to_pos].pos = to_pos
+  end
+
+  def promote_pawn(pos)
+    color = self[pos].color
+    self[pos] = Queen.new(color, self, pos)
   end
 
   def in_check?(color)
@@ -114,7 +124,6 @@ class Board
         end
       end
     end
-
 
     # If all pieces are either Kings or Bishops
     if pieces.all? { |p| p.class == King || p.class == Bishop }
