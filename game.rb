@@ -2,6 +2,7 @@ require_relative "board.rb"
 require_relative "display.rb"
 require_relative "human_player.rb"
 require_relative "computer_player.rb"
+require 'byebug'
 
 class Game
 
@@ -23,6 +24,11 @@ class Game
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
         display.last_move = [start_pos, end_pos]
+
+        if board.pending_promotion
+          piece = players[current_player].promote_to
+          board.promote_pawn(piece, end_pos)
+        end
 
         swap_turn!
         notify_players

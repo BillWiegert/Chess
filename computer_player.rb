@@ -62,6 +62,10 @@ class ComputerPlayer < Player
     [start_pos, end_pos]
   end
 
+  def promote_to
+    Queen
+  end
+
   private
 
   def my_pieces()

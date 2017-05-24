@@ -2,11 +2,11 @@ require_relative "pieces.rb"
 
 class Board
 
-  attr_reader :grid
+  attr_reader :grid, :pending_promotion
 
   def initialize(fill = true)
-    make_starting_grid(fill)
     @pending_promotion = false
+    make_starting_grid(fill)
   end
 
   def [](pos)
@@ -75,7 +75,7 @@ class Board
     end
 
     if piece.class == Pawn && piece.promotion_row == to_pos[0]
-      promote_pawn(to_pos)
+      @pending_promotion = true
     end
   end
 
@@ -85,9 +85,10 @@ class Board
     self[to_pos].pos = to_pos
   end
 
-  def promote_pawn(pos)
+  def promote_pawn(piece, pos)
     color = self[pos].color
-    self[pos] = Queen.new(color, self, pos)
+    self[pos] = piece.new(color, self, pos)
+    @pending_promotion = false
   end
 
   def in_check?(color)

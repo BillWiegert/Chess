@@ -33,4 +33,23 @@ class HumanPlayer < Player
     [start_pos, end_pos]
   end
 
+  def promote_to
+    puts "Choose a piece to promote to: (Q R B N)"
+    choice = gets.chomp.downcase
+    case choice
+    when "q"
+      return Queen
+    when "r"
+      return Rook
+    when "b"
+      return Bishop
+    when "n"
+      return Knight
+    else
+      system "clear"
+      display.render
+      puts "Invalid choice"
+      return promote_to
+    end
+  end
 end
