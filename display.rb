@@ -10,10 +10,19 @@ class Display
     @grid = board.grid
     @cursor = Cursor.new(board)
     @notifications = {}
+    @show_cursor = true
   end
 
   def inspect
     "Display =>"
+  end
+
+  def show_cursor
+    @show_cursor = true
+  end
+
+  def hide_cursor
+    @show_cursor = false
   end
 
   def selected=(selected)
@@ -32,7 +41,7 @@ class Display
     puts " A  B  C  D  E  F  G  H"
     @grid.each_with_index do |row, x_index|
       row.each_with_index do |cell, y_index|
-        if @cursor.cursor_pos == [x_index, y_index]
+        if @show_cursor && @cursor.cursor_pos == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :red)
         elsif @selected && @selected == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :green)

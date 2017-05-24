@@ -8,6 +8,7 @@ class HumanPlayer < Player
 
     until start_pos && end_pos
       system "clear"
+      display.show_cursor
       display.render
 
       if start_pos
