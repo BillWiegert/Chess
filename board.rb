@@ -6,6 +6,10 @@ class Board
 
   def initialize(fill = true)
     @pending_promotion = false
+    @ghost_pawns = {
+      white: nil,
+      black: nil
+    }
     make_starting_grid(fill)
   end
 
@@ -54,6 +58,10 @@ class Board
       raise 'You cannot move into check'
     end
 
+    if self[to_pos].class == GhostPawn && piece.class == Pawn
+      capture_ghost(to_pos)
+    end
+
     self.move_piece!(from_pos, to_pos)
 
     if piece.class == Rook || piece.class == King
@@ -74,8 +82,19 @@ class Board
       move_piece!(rook_pos, dest_pos)
     end
 
-    if piece.class == Pawn && piece.promotion_row == to_pos[0]
-      @pending_promotion = true
+    if piece.class == Pawn
+      if piece.promotion_row == to_pos[0]
+        @pending_promotion = true
+      else
+        move_dist = to_pos[0] - from_pos[0]
+
+        if move_dist == -2 || move_dist == 2
+          ghost_pos = [to_pos[0] - move_dist * 0.5, to_pos[1]]
+          ghost = GhostPawn.new(piece.color, self, ghost_pos, piece)
+          self[ghost_pos] = ghost
+          @ghost_pawns[ghost.color] = ghost_pos
+        end
+      end
     end
   end
 
@@ -89,6 +108,17 @@ class Board
     color = self[pos].color
     self[pos] = piece.new(color, self, pos)
     @pending_promotion = false
+  end
+
+  def exterminate_ghost(color)
+    pos = @ghost_pawns[color]
+    self[pos] = NullPiece.new(:nil, self, pos)
+  end
+
+  def capture_ghost(pos)
+    raise "That is not a ghost pawn" unless self[pos].class == GhostPawn
+    origin_pawn = self[pos].origin
+    self[origin_pawn.pos] = NullPiece.new(:nil, self, origin_pawn.pos)
   end
 
   def in_check?(color)
