@@ -1,5 +1,5 @@
 require_relative "pieces.rb"
-
+require 'byebug'
 class Board
 
   attr_reader :grid, :pending_promotion
@@ -90,7 +90,8 @@ class Board
 
         if move_dist == -2 || move_dist == 2
           ghost_pos = [to_pos[0] - move_dist * 0.5, to_pos[1]]
-          ghost = GhostPawn.new(piece.color, self, ghost_pos, piece)
+          ghost = GhostPawn.new(piece.color, self, ghost_pos)
+          ghost.origin = piece.pos
           self[ghost_pos] = ghost
           @ghost_pawns[ghost.color] = ghost_pos
         end
