@@ -6,6 +6,7 @@ class ComputerPlayer < Player
 
   VALUES = {
     "Pawn" => 1,
+    "GhostPawn" => 1,
     "Knight" => 3,
     "Bishop" => 3,
     "Rook" => 5,
@@ -25,6 +26,9 @@ class ComputerPlayer < Player
     display.render
 
     capturable = capturable_pieces
+    threatened = threatened_pieces.reject do |p|
+      p.valid_moves.length == 0
+    end
 
     if capturable.length > 0
       most_valuable = capturable.first
@@ -48,6 +52,18 @@ class ComputerPlayer < Player
       end
 
       start_pos, end_pos = attacker.pos, most_valuable.pos
+    elsif threatened.length > 0
+      most_valuable = threatened.first
+
+      threatened[1..-1].each do |piece|
+        if piece_value(piece) > piece_value(most_valuable)
+          most_valuable = piece
+        end
+      end
+
+      start_pos = most_valuable.pos
+      possible_moves = most_valuable.valid_moves
+      end_pos = possible_moves[rand(possible_moves.length)]
     else
       piece_to_move = movable_pieces[rand(movable_pieces.length)]
       start_pos = piece_to_move.pos
