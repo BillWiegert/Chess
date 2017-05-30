@@ -1,6 +1,31 @@
 require_relative "pieces.rb"
-require 'byebug'
+
 class Board
+
+  RANKS = {
+    0 => "8",
+    1 => "7",
+    2 => "6",
+    3 => "5",
+    4 => "4",
+    5 => "3",
+    6 => "2",
+    7 => "1"
+  }
+
+  FILES = {
+    0 => "a",
+    1 => "b",
+    2 => "c",
+    3 => "d",
+    4 => "e",
+    5 => "f",
+    6 => "g",
+    7 => "h"
+  }
+
+  REV_RANKS = RANKS.invert
+  REV_FILES = FILES.invert
 
   attr_reader :grid, :pending_promotion
 
@@ -25,6 +50,18 @@ class Board
   def []=(pos, piece)
     row, col = pos
     @grid[row][col] = piece
+  end
+
+  def pos_to_s(pos)
+    # [3, 1] => 'b3'
+    raise "Invalid position" unless pos.class == Array && pos.length == 2
+    FILES[pos[1]] + RANKS[pos[0]]
+  end
+
+  def str_to_pos(str)
+    # 'b3' => [3, 1]
+    raise "String does not represent a position" unless str.length == 2
+    [REV_RANKS[str[1]], REV_FILES[str[0]]]
   end
 
   def pieces

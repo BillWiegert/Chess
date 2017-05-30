@@ -3,7 +3,7 @@ require_relative "cursor"
 
 class Display
 
-  attr_reader :notifications, :cursor
+  attr_reader :notifications, :cursor, :last_move, :board
 
   def initialize(board)
     @board = board
@@ -58,6 +58,12 @@ class Display
       line -= 1
       puts ""
       count += 1
+    end
+
+    if last_move
+      piece = board[last_move[1]]
+      str = board.pos_to_s(last_move[1])
+      puts(piece.symbol + " " + str)
     end
 
     @notifications.each do |key, val|

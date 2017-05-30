@@ -1,6 +1,5 @@
 require_relative 'display.rb'
 require_relative 'player.rb'
-require 'byebug'
 
 class ComputerPlayer < Player
 
@@ -93,7 +92,7 @@ class ComputerPlayer < Player
   end
 
   def enemy_pieces()
-    board.pieces.select { |piece| piece.color != color }
+    board.pieces.select { |piece| piece.color != color && piece.class != GhostPawn }
   end
 
   def capturable_pieces()
