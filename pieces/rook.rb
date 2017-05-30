@@ -15,4 +15,11 @@ class Rook < Piece
   def move_dirs
     perpendicular
   end
+
+  def dup(new_board)
+    duped = self.class.new(self.color, new_board, self.pos)
+    duped.can_castle = self.can_castle
+
+    duped
+  end
 end

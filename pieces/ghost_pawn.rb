@@ -18,4 +18,11 @@ class GhostPawn < Piece
   def moves
     []
   end
+
+  def dup
+    duped = GhostPawn.new(self.color, self.board, self.pos)
+    duped.origin = self.origin || nil
+
+    duped
+  end
 end

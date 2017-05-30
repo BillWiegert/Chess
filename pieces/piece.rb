@@ -35,6 +35,10 @@ class Piece
     moves.reject { |pos| move_into_check?(pos) }
   end
 
+  def dup(new_board)
+    self.class.new(self.color, new_board, self.pos)
+  end
+
   private
 
   def move_into_check?(to_pos)
