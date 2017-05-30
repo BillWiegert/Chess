@@ -1,4 +1,5 @@
 require_relative 'piece'
+require 'byebug'
 
 class Pawn < Piece
 
@@ -47,7 +48,7 @@ class Pawn < Piece
     diagonal_moves = [[x + forward_dir, y - 1], [x + forward_dir, y + 1]]
 
     diagonal_moves.select do |end_pos|
-      board.valid_pos?(end_pos) && !board[end_pos].color == :nil &&
+      board.valid_pos?(end_pos) && board[end_pos].color != :nil &&
       board[end_pos].color != color
     end
   end

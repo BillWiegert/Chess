@@ -6,7 +6,7 @@ class GhostPawn < Piece
   attr_reader :origin
 
   def initialize(color, board, pos)
-    @symbol = define_symbol("G")
+    @symbol = define_symbol(" ")
     @origin = origin
     super(color, board, pos)
   end
