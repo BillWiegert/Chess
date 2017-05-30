@@ -69,7 +69,8 @@ class Board
     end
 
     # If King moved two spaces move Rook to complete castle
-    if piece.class == King && (from_pos[1] - to_pos[1]) % 2 == 0
+    if piece.class == King && (from_pos[1] - to_pos[1]) % 2 == 0 &&
+      from_pos[0] == to_pos[0]
       if from_pos[1] - to_pos[1] == 2
         # Left Rook
         rook_pos = [from_pos[0], 0]
@@ -111,15 +112,20 @@ class Board
     @pending_promotion = false
   end
 
-  def exterminate_ghost(color)
-    pos = @ghost_pawns[color]
-    self[pos] = NullPiece.new(:nil, self, pos)
+  def exterminate_ghosts(color)
+    if @ghost_pawns[color]
+      pos = @ghost_pawns[color]
+      if self[pos].class == GhostPawn
+        self[pos] = NullPiece.new(:nil, self, pos)
+      end
+      @ghost_pawns[color] = nil
+    end
   end
 
   def capture_ghost(pos)
     raise "That is not a ghost pawn" unless self[pos].class == GhostPawn
-    origin_pawn = self[pos].origin
-    self[origin_pawn.pos] = NullPiece.new(:nil, self, origin_pawn.pos)
+    origin_pos = self[pos].origin
+    self[origin_pos] = NullPiece.new(:nil, self, origin_pos)
   end
 
   def in_check?(color)
