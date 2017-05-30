@@ -19,8 +19,8 @@ class GhostPawn < Piece
     []
   end
 
-  def dup
-    duped = GhostPawn.new(self.color, self.board, self.pos)
+  def dup(new_board)
+    duped = GhostPawn.new(self.color, new_board, self.pos)
     duped.origin = self.origin || nil
 
     duped
