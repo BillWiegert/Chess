@@ -7,7 +7,7 @@ class HumanPlayer < Player
 
     until start_pos && end_pos
       system "clear"
-      display.show_cursor
+      display.show_cursor = true
       display.render
 
       if start_pos

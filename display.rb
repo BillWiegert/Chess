@@ -3,7 +3,7 @@ require_relative "cursor"
 
 class Display
 
-  attr_reader :notifications, :cursor, :board
+  attr_reader :cursor, :board
   attr_accessor :notifications, :show_cursor, :selected, :last_move
 
   def initialize(board)
@@ -15,14 +15,6 @@ class Display
 
   def inspect
     "Display =>"
-  end
-
-  def show_cursor
-    show_cursor = true
-  end
-
-  def hide_cursor
-    show_cursor = false
   end
 
   def render

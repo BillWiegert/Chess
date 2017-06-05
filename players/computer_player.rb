@@ -20,7 +20,7 @@ class ComputerPlayer < Player
     start_time = Time.now.to_i
     @board = board
     system "clear"
-    display.hide_cursor
+    display.show_cursor = false
     display.render
 
     capturable = capturable_pieces
