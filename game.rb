@@ -1,7 +1,7 @@
-require_relative "board.rb"
-require_relative "display.rb"
-require_relative "human_player.rb"
-require_relative "computer_player.rb"
+require_relative "board"
+require_relative "display"
+require_relative "human_player"
+require_relative "computer_player"
 
 class Game
 
@@ -15,6 +15,7 @@ class Game
       black: player2 == :human ? HumanPlayer.new(:black, @display) : ComputerPlayer.new(:black, @display)
     }
     @current_player = :white
+    @move_history = []
   end
 
   def play

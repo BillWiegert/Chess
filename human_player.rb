@@ -1,5 +1,5 @@
-require_relative 'display.rb'
-require_relative 'player.rb'
+require_relative 'display'
+require_relative 'player'
 
 class HumanPlayer < Player
 

@@ -1,4 +1,4 @@
-require_relative "pieces.rb"
+require_relative "pieces"
 
 class Board
 

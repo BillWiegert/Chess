@@ -3,11 +3,11 @@ require_relative "cursor"
 
 class Display
 
-  attr_reader :notifications, :cursor, :last_move, :board
+  attr_reader :notifications, :cursor, :board
+  attr_accessor :notifications, :show_cursor, :selected, :last_move
 
   def initialize(board)
     @board = board
-    @grid = board.grid
     @cursor = Cursor.new(board)
     @notifications = {}
     @show_cursor = true
@@ -18,36 +18,28 @@ class Display
   end
 
   def show_cursor
-    @show_cursor = true
+    show_cursor = true
   end
 
   def hide_cursor
-    @show_cursor = false
-  end
-
-  def selected=(selected)
-    @selected = selected
-  end
-
-  def last_move=(last_move)
-    @last_move = last_move
+    show_cursor = false
   end
 
   def render
-    @grid.flatten.each
+    board.grid.flatten.each
     count = 0
     line  = 8
 
     puts " A  B  C  D  E  F  G  H"
-    @grid.each_with_index do |row, x_index|
+    board.grid.each_with_index do |row, x_index|
       row.each_with_index do |cell, y_index|
-        if @show_cursor && @cursor.cursor_pos == [x_index, y_index]
+        if show_cursor && cursor.cursor_pos == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :red)
-        elsif @selected && @selected == [x_index, y_index]
+        elsif selected && selected == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :green)
-        elsif @last_move && @last_move[0] == [x_index, y_index]
+        elsif last_move && last_move[0] == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :yellow)
-        elsif @last_move && @last_move[1] == [x_index, y_index]
+        elsif last_move && last_move[1] == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :yellow)
         else
           print " #{cell.to_s} ".colorize(background: checker(count))
@@ -66,7 +58,7 @@ class Display
       puts(piece.symbol + " " + str)
     end
 
-    @notifications.each do |key, val|
+    notifications.each do |key, val|
       puts "#{val}"
     end
   end
@@ -80,14 +72,14 @@ class Display
   end
 
   def reset!
-    @notifications.delete(:error)
+    notifications.delete(:error)
   end
 
   def uncheck!
-    @notifications.delete(:check)
+    notifications.delete(:check)
   end
 
   def set_check!
-    @notifications[:check] = "Check!"
+    notifications[:check] = "Check!"
   end
 end
