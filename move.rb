@@ -10,16 +10,18 @@ class Move
   end
 
   def inspect
-    "Move =>"
+    "Move => #{notation}"
   end
 
   def notation
     piece = board[from]
     str = ""
-    piece.class == Pawn ? str << board.pos_to_s(from)[0] :
-      str << piece.symbol + " "
 
-    # check if any piece of the same class and color can make the same move
+    if piece.class == Pawn
+      str << board.pos_to_s(from)[0]
+    else
+      str << piece.symbol + " "
+    end
 
     str << "x" if capture?
     str << board.pos_to_s(to)
