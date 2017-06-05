@@ -1,4 +1,5 @@
 require_relative "pieces"
+require_relative "move"
 
 class Board
 
