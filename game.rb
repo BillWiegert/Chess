@@ -47,6 +47,18 @@ class Game
       puts "Draw! Game ended in stalemate."
     end
 
+    move_num = 1
+    board.move_history.each do |m|
+      if m.color == :white
+        print "#{move_num}. #{m.notation} "
+      else
+        print "#{m.notation}\n"
+        move_num += 1
+      end
+    end
+
+    print "\n"
+
     nil
   end
 
