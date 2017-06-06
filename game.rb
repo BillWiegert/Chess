@@ -6,15 +6,14 @@ class Game
 
   attr_reader :board, :display, :players, :current_player
 
-  def initialize(player1, player2)
-    @board = Board.new
+  def initialize(player1, player2, board = Board.new)
+    @board = board
     @display = Display.new(@board)
     @players = {
       white: player1 == :human ? HumanPlayer.new(:white, @display) : ComputerPlayer.new(:white, @display),
       black: player2 == :human ? HumanPlayer.new(:black, @display) : ComputerPlayer.new(:black, @display)
     }
     @current_player = :white
-    @move_history = []
   end
 
   def play
@@ -24,7 +23,7 @@ class Game
 
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
-        display.last_move = [start_pos, end_pos]
+        display.last_move = board.move_history.last
 
         if board.pending_promotion
           piece = players[current_player].promote_to

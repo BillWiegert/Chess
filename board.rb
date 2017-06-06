@@ -28,7 +28,7 @@ class Board
   REV_RANKS = RANKS.invert
   REV_FILES = FILES.invert
 
-  attr_reader :grid, :pending_promotion
+  attr_reader :grid, :pending_promotion, :move_history
 
   def initialize(fill = true)
     @pending_promotion = false
@@ -36,6 +36,7 @@ class Board
       white: nil,
       black: nil
     }
+    @move_history = []
     make_starting_grid(fill)
   end
 
@@ -61,7 +62,7 @@ class Board
 
   def str_to_pos(str)
     # 'b3' => [3, 1]
-    raise "String does not represent a position" unless str.length == 2
+    raise "String does not represent a valid position" unless str.length == 2
     [REV_RANKS[str[1]], REV_FILES[str[0]]]
   end
 
@@ -118,7 +119,7 @@ class Board
         rook_pos = [from_pos[0], 7]
         dest_pos = [from_pos[0], 5]
       end
-      move_piece!(rook_pos, dest_pos)
+      move_piece!(rook_pos, dest_pos, false)
     end
 
     if piece.class == Pawn
@@ -138,10 +139,16 @@ class Board
     end
   end
 
-  def move_piece!(from_pos, to_pos)
+  def move_piece!(from_pos, to_pos, record = true)
+    moved_piece, dest_piece = self[from_pos], self[to_pos]
     self[to_pos] = self[from_pos]
     self[from_pos] = NullPiece.new(:nil, self, from_pos)
     self[to_pos].pos = to_pos
+
+    if record
+      move = Move.new(from_pos, to_pos, moved_piece, dest_piece, self)
+      move_history << move
+    end
   end
 
   def promote_pawn(piece, pos)

@@ -29,9 +29,9 @@ class Display
           print " #{cell.to_s} ".colorize(background: :red)
         elsif selected && selected == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :green)
-        elsif last_move && last_move[0] == [x_index, y_index]
+        elsif last_move && last_move.from == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :yellow)
-        elsif last_move && last_move[1] == [x_index, y_index]
+        elsif last_move && last_move.to == [x_index, y_index]
           print " #{cell.to_s} ".colorize(background: :yellow)
         else
           print " #{cell.to_s} ".colorize(background: checker(count))
@@ -45,9 +45,10 @@ class Display
     end
 
     if last_move
-      piece = board[last_move[1]]
-      str = board.pos_to_s(last_move[1])
-      puts(piece.symbol + " " + str)
+      puts last_move.notation
+      # piece = board[last_move[1]]
+      # str = board.pos_to_s(last_move[1])
+      # puts(piece.symbol + " " + str)
     end
 
     notifications.each do |key, val|

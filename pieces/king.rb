@@ -42,7 +42,7 @@ class King < Piece
 
     return false unless rook.class == Rook && rook.can_castle
     return false unless castle_path.all? { |path_pos| board.empty?(path_pos) }
-    # remove b1/b8 from attack checking as it only needs to be empty
+    # Remove b1/b8 from attack checking as it only needs to be empty
     castle_path.pop if castle_path.length == 3
     castle_path << pos
 
