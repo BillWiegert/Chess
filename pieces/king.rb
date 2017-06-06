@@ -32,7 +32,7 @@ class King < Piece
 
     if side == :queen
       rook = board[[pos[0], 0]]
-      castle_path = [[pos[0], 2], [pos[0], 3]]
+      castle_path = [[pos[0], 2], [pos[0], 3], [pos[0], 1]]
     elsif side == :king
       rook = board[[pos[0], 7]]
       castle_path = [[pos[0], 5], [pos[0], 6]]
@@ -42,10 +42,13 @@ class King < Piece
 
     return false unless rook.class == Rook && rook.can_castle
     return false unless castle_path.all? { |path_pos| board.empty?(path_pos) }
+    # remove b1/b8 from attack checking as it only needs to be empty
+    castle_path.pop if castle_path.length == 3
     castle_path << pos
 
     return false if castle_path.any? do |path_pos|
       board.pieces.any? do |p|
+        # Don't check enemy king's moves if it can castle to avoid infinite loop
         next if p.class == King && p.can_castle
         p.color != color && p.moves.include?(path_pos)
       end
