@@ -8,6 +8,10 @@ class Queen < Piece
     super(color, board, pos)
   end
 
+  def initial
+    "Q"
+  end
+
   def move_dirs
     perpendicular + diagonal
   end

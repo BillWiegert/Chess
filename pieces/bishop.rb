@@ -8,6 +8,10 @@ class Bishop < Piece
     super(color, board, pos)
   end
 
+  def initial
+    "B"
+  end
+
   def move_dirs
     diagonal
   end

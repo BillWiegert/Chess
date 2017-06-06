@@ -12,6 +12,10 @@ class Rook < Piece
     super(color, board, pos)
   end
 
+  def initial
+    "R"
+  end
+
   def move_dirs
     perpendicular
   end

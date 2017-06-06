@@ -12,6 +12,10 @@ class King < Piece
     super(color, board, pos)
   end
 
+  def initial
+    "K"
+  end
+
   def move_dirs
     dirs = [[1,1],[-1,1],[-1,-1],[1,-1],[0,1],[1,0],[0,-1],[-1,0]]
     dirs << [0,-2] if castleable?(:queen)

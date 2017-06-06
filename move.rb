@@ -1,5 +1,7 @@
 require_relative "board"
 
+TYPES = [:symbolic, :PGN]
+
 class Move
 
   attr_reader :from, :to, :board, :moved_piece,
@@ -10,7 +12,7 @@ class Move
     @moved_piece, @dest_piece = moved_piece, dest_piece
     @color = moved_piece.color
     @opp_color = color == :white ? :black : :white
-    @notation = generate_notation
+    @notation = generate_notation(:PGN)
   end
 
   def inspect
@@ -19,15 +21,18 @@ class Move
 
   private
 
-  def generate_notation
+  def generate_notation(type)
+    raise "Invalid notation type" unless TYPES.include?(type)
     str = ""
 
     if castle?
       str << castle?
     elsif moved_piece.class == Pawn
       str << board.pos_to_s(from)[0] if capture?
-    else
+    elsif type == :symbolic
       str << moved_piece.symbol + " "
+    elsif type == :PGN
+      str << moved_piece.initial
     end
 
     unless castle?

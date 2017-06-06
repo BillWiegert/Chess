@@ -7,6 +7,10 @@ class Pawn < Piece
     super(color, board, pos)
   end
 
+  def initial
+    ""
+  end
+
   def moves
     forward_moves + diagonal_attacks
   end
