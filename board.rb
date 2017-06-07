@@ -141,19 +141,21 @@ class Board
 
   def move_piece!(from_pos, to_pos, record = true)
     moved_piece, dest_piece = self[from_pos], self[to_pos]
+
+    if record
+      move = Move.new(from_pos, to_pos, self)
+      move_history << move
+    end
+
     self[to_pos] = self[from_pos]
     self[from_pos] = NullPiece.new(:nil, self, from_pos)
     self[to_pos].pos = to_pos
-
-    if record
-      move = Move.new(from_pos, to_pos, moved_piece, dest_piece, self)
-      move_history << move
-    end
   end
 
-  def promote_pawn(piece, pos)
+  def promote_pawn(piece_type, pos)
     color = self[pos].color
-    self[pos] = piece.new(color, self, pos)
+    self[pos] = piece_type.new(color, self, pos)
+    move_history.last.promote_to(piece_type)
     @pending_promotion = false
   end
 
