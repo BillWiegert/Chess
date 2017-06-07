@@ -8,7 +8,7 @@ class Queen < Piece
     super(color, board, pos)
   end
 
-  def initial
+  def self.initial
     "Q"
   end
 

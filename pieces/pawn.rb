@@ -7,7 +7,7 @@ class Pawn < Piece
     super(color, board, pos)
   end
 
-  def initial
+  def self.initial
     ""
   end
 
