@@ -96,4 +96,13 @@ class SmartAI < Player
   BLACK_QUEEN_PS = WHITE_QUEEN_PS.reverse
   BLACK_KING_PS = WHITE_KING_PS.reverse
   BLACK_KING_PS_END = WHITE_KING_PS_END.reverse
+
+  PAWN_PS = { white: WHITE_PAWN_PS, black: BLACK_PAWN_PS }
+  KNIGHT_PS = { white: WHITE_KNIGHT_PS, black: BLACK_KNIGHT_PS }
+  BISHOP_PS = { white: WHITE_BISHOP_PS, black: BLACK_BISHOP_PS }
+  ROOK_PS = { white: WHITE_ROOK_PS, black: BLACK_ROOK_PS }
+  QUEEN_PS = { white: WHITE_QUEEN_PS, black: BLACK_QUEEN_PS }
+  KING_PS = { white: WHITE_KING_PS, black: BLACK_KING_PS }
+  KING_PS_END = { white: WHITE_KING_PS_END, black: BLACK_KING_PS_END }
+
 end
