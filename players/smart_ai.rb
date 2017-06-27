@@ -105,4 +105,52 @@ class SmartAI < Player
   KING_PS = { white: WHITE_KING_PS, black: BLACK_KING_PS }
   KING_PS_END = { white: WHITE_KING_PS_END, black: BLACK_KING_PS_END }
 
+  attr_reader :board
+
+  def make_move(board)
+    @board = board
+  end
+
+  private
+
+  def my_pieces()
+    board.pieces.select { |piece| piece.color == color }
+  end
+
+  def piece_value(piece)
+    VALUES[piece.class.to_s]
+  end
+
+  def find_best_move()
+    best_score = -99999
+
+    my_pieces().each do |piece|
+      piece.valid_moves.each do |move|
+        test_board = board.dup
+        test_board.move_piece!(piece.pos, move)
+        if evaluate_position(test_board) > best_score
+          best_move = [piece.pos, move]
+        end
+      end
+    end
+
+    best_move
+  end
+
+  def evaluate_position(test_board)
+    score = 0
+    test_board.pieces.each do |piece|
+      score += evaluate_piece(piece)
+    end
+
+    score
+  end
+
+  def evaluate_piece(piece)
+    value = piece_value(piece)
+
+    # apply piece-square table value modifier
+
+    piece.color == color ? value : -value
+  end
 end
