@@ -28,7 +28,8 @@ class Board
   REV_RANKS = RANKS.invert
   REV_FILES = FILES.invert
 
-  attr_reader :grid, :pending_promotion, :move_history
+  attr_accessor :grid, :pending_promotion, :move_history,
+    :previous_state, :ghost_pawns
 
   def initialize(fill = true)
     @pending_promotion = false
@@ -37,6 +38,7 @@ class Board
       black: nil
     }
     @move_history = []
+    @previous_state = nil
     make_starting_grid(fill)
   end
 
@@ -81,6 +83,8 @@ class Board
       new_board[piece.pos] = new_piece
     end
 
+    new_board.previous_state = previous_state
+
     new_board
   end
 
@@ -92,7 +96,7 @@ class Board
     if piece.color != turn_color
       raise "That is not your piece"
     elsif !piece.moves.include?(to_pos)
-      raise 'Invalid move'
+      raise "Invalid move: #{self[from_pos]}, #{from_pos}, #{to_pos}"
     elsif !piece.valid_moves.include?(to_pos)
       raise 'You cannot move into check'
     end
@@ -147,9 +151,19 @@ class Board
       move_history << move
     end
 
+    @previous_state = self.dup
+
     self[to_pos] = self[from_pos]
     self[from_pos] = NullPiece.new(:nil, self, from_pos)
     self[to_pos].pos = to_pos
+  end
+
+  def undo
+    @grid = previous_state.grid
+    @pending_promotion = previous_state.pending_promotion
+    @ghost_pawns = previous_state.ghost_pawns
+    @move_history = previous_state.move_history
+    @previous_state = previous_state.previous_state
   end
 
   def promote_pawn(piece_type, pos)
