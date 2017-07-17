@@ -1,4 +1,5 @@
 require_relative 'player'
+require 'byebug'
 
 class SmartAI < Player
   VALUES = {
@@ -105,6 +106,15 @@ class SmartAI < Player
   KING_PS = { white: WHITE_KING_PS, black: BLACK_KING_PS }
   KING_PS_END = { white: WHITE_KING_PS_END, black: BLACK_KING_PS_END }
 
+  PS_TABLES = {
+    "Pawn" => PAWN_PS,
+    "Knight" => KNIGHT_PS,
+    "Bishop" => BISHOP_PS,
+    "Rook" => ROOK_PS,
+    "Queen" => QUEEN_PS,
+    "King" => KING_PS
+  }
+
   attr_reader :board
 
   def make_move(board)
@@ -148,8 +158,9 @@ class SmartAI < Player
 
   def evaluate_piece(piece)
     value = piece_value(piece)
-
-    # apply piece-square table value modifier
+    type = piece.class.to_s
+    y,x = piece.pos
+    value += PS_TABLES[type][piece.color][y][x]
 
     piece.color == color ? value : -value
   end
