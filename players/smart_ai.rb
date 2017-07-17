@@ -2,6 +2,7 @@ require_relative 'player'
 require 'byebug'
 
 class SmartAI < Player
+
   VALUES = {
     "Pawn" => 100,
     "Knight" => 320,
@@ -119,12 +120,33 @@ class SmartAI < Player
 
   def make_move(board)
     @board = board
+    system "clear"
+    display.show_cursor = false
+    display.render
+
+    return find_best_move
+  end
+
+  def promote_to
+    Queen
   end
 
   private
 
+  def opp_color(c = nil)
+    if c
+      return c == :white ? :black : :white
+    end
+
+    color == :white ? :black : :white
+  end
+
   def my_pieces()
     board.pieces.select { |piece| piece.color == color }
+  end
+
+  def enemy_pieces()
+    board.pieces.select { |piece| piece.color == opp_color}
   end
 
   def piece_value(piece)
@@ -133,18 +155,65 @@ class SmartAI < Player
 
   def find_best_move()
     best_score = -99999
+    best_move = nil
 
     my_pieces().each do |piece|
       piece.valid_moves.each do |move|
         test_board = board.dup
         test_board.move_piece!(piece.pos, move)
-        if evaluate_position(test_board) > best_score
+        new_score = minimax(1, test_board, false)
+
+        if new_score > best_score
           best_move = [piece.pos, move]
+          best_score = new_score
         end
       end
     end
 
     best_move
+  end
+
+  def minimax(depth, test_board, my_turn)
+    if depth == 0
+      return evaluate_position(test_board)
+    end
+
+    if my_turn
+      best_score = -99999
+
+      my_pieces.each do |piece|
+        piece.valid_moves.each do |move|
+          new_board = test_board.dup
+          new_board.move_piece!(piece.pos, move)
+
+          # test_display = Display.new(new_board)
+          # system "clear"
+          # test_display.render
+
+          best_score = [best_score, minimax(depth - 1, new_board, !my_turn)].max
+        end
+      end
+
+      return best_score
+
+    else # Enemy Turn
+      best_score = 99999
+
+      enemy_pieces.each do |piece|
+        piece.valid_moves.each do |move|
+          new_board = test_board.dup
+          new_board.move_piece!(piece.pos, move)
+
+          # test_display = Display.new(new_board)
+          # system "clear"
+          # test_display.render
+
+          best_score = [best_score, minimax(depth-1, new_board, !my_turn)].min
+        end
+      end
+
+      return best_score
+    end
   end
 
   def evaluate_position(test_board)
@@ -157,9 +226,12 @@ class SmartAI < Player
   end
 
   def evaluate_piece(piece)
-    value = piece_value(piece)
     type = piece.class.to_s
     y,x = piece.pos
+
+    return 0 unless VALUES.keys.include?(type)
+
+    value = piece_value(piece)
     value += PS_TABLES[type][piece.color][y][x]
 
     piece.color == color ? value : -value
