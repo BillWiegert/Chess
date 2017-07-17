@@ -10,8 +10,8 @@ class Game
     @board = board
     @display = Display.new(@board)
     @players = {
-      white: player1 == :human ? HumanPlayer.new(:white, @display) : ComputerPlayer.new(:white, @display),
-      black: player2 == :human ? HumanPlayer.new(:black, @display) : ComputerPlayer.new(:black, @display)
+      white: player1 == :human ? HumanPlayer.new(:white, @display) : SmartAI.new(:white, @display),
+      black: player2 == :human ? HumanPlayer.new(:black, @display) : SmartAI.new(:black, @display)
     }
     @current_player = :white
   end

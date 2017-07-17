@@ -5,4 +5,8 @@ class NullPiece < Piece
     super(color, board, pos)
     @symbol = define_symbol(" ")
   end
+
+  def self.initial
+    "NULL"
+  end
 end
