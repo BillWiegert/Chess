@@ -14,13 +14,7 @@ Use the arrow keys or WASD to move the cursor, indicated by the red square, to t
 
 ### The AI
 
-Currently the AI follows a simple priority system:
-
-- If it can take any pieces it will take the vulnerable piece of the highest value with it's lowest value piece possible.
-
-- If one of it's pieces is threatened it will move it out of harm's way if possible.
-
-- Otherwise it will make a random move valid move.
+The AI uses a minimax algorithm to consider multiple turns ahead when choosing what move to make. It calculates a score for each possible move using individual piece values modified by their positions on the board. It then chooses the move that will yield the best possible score assuming both players play optimally.
 
 ### Move History
 
@@ -32,7 +26,7 @@ The board keeps an array of these moves as a move history to be displayed when t
 
 ### AI Improvement
 
-At the moment the AI only considers the current board position in it's decision making and it is only concerned with taking and saving pieces. In order to improve the AI it must be able to assign a value to board configurations and evaluate possible configurations of the board multiple turns ahead.
+To improve the speed at which the AI operates and, therefore, the depth of turns it can evaluate I plan to implement alpha-beta pruning. This will ignore branches of moves for which we already know there are better alternatives.
 
 ### Web Hosting
 
