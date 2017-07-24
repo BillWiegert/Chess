@@ -161,7 +161,7 @@ class SmartAI < Player
       piece.valid_moves.each do |move|
         test_board = board.dup
         test_board.move_piece!(piece.pos, move)
-        new_score = minimax(1, test_board, false)
+        new_score = minimax(2, test_board, false)
 
         if new_score > best_score
           best_move = [piece.pos, move]
