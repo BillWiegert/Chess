@@ -1,5 +1,6 @@
 require_relative "pieces"
 require_relative "move"
+require 'byebug'
 
 class Board
 
@@ -153,7 +154,10 @@ class Board
   end
 
   def undo
-
+    move = move_history.pop
+    self[move.from] = move.moved_piece
+    self[move.from].pos = move.from
+    self[move.to] = move.dest_piece
   end
 
   def promote_pawn(piece_type, pos)
