@@ -24,6 +24,13 @@ class Move
     notation << "=" + piece_type.initial
   end
 
+  def castle?
+    return false unless moved_piece.class == King
+    return "O-O-O" if from[1] - to[1] == 2 # Queen side castle
+    return "O-O" if from[1] - to[1] == -2 # King side castle
+    return false
+  end
+
   private
 
   def generate_notation(type)
@@ -87,12 +94,5 @@ class Move
     else
       return board.pos_to_s(moved_piece.pos)
     end
-  end
-
-  def castle?
-    return false unless moved_piece.class == King
-    return "O-O-O" if from[1] - to[1] == 2 # Queen side castle
-    return "O-O" if from[1] - to[1] == -2 # King side castle
-    return false
   end
 end

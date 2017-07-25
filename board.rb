@@ -155,9 +155,31 @@ class Board
 
   def undo
     move = move_history.pop
+
     self[move.from] = move.moved_piece
     self[move.from].pos = move.from
     self[move.to] = move.dest_piece
+
+    if move.castle?
+      uncastle(move)
+    end
+  end
+
+  # Reset rook after undoing a castle
+  def uncastle(move)
+    rank = move.from[0]
+
+    if move.castle? == "O-O-O"
+      rook_to, rook_from = [rank, 0], [rank, 3]
+    else
+      rook_to, rook_from = [rank, 7], [rank, 5]
+    end
+
+    self[rook_to] = self[rook_from]
+    self[rook_to].pos = rook_to
+    self[rook_from] = NullPiece.new(:nil, self, rook_from)
+    self[rook_to].can_castle = true # Rook
+    move.moved_piece.can_castle = true # King
   end
 
   def promote_pawn(piece_type, pos)
