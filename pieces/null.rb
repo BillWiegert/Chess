@@ -1,9 +1,12 @@
+require 'singleton'
 require_relative 'piece'
 
 class NullPiece < Piece
-  def initialize(color, board, pos = nil)
-    super(color, board, pos)
+  include Singleton
+
+  def initialize
     @symbol = define_symbol(" ")
+    @color = :nil
   end
 
   def self.initial

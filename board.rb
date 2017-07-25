@@ -30,6 +30,7 @@ class Board
   REV_FILES = FILES.invert
 
   attr_accessor :grid, :pending_promotion, :move_history, :ghost_pawns
+  attr_reader :null_piece
 
   def initialize(fill = true)
     @pending_promotion = false
@@ -38,6 +39,7 @@ class Board
       black: nil
     }
     @move_history = []
+    @null_piece = NullPiece.instance
     make_starting_grid(fill)
   end
 
@@ -149,7 +151,7 @@ class Board
     end
 
     self[to_pos] = self[from_pos]
-    self[from_pos] = NullPiece.new(:nil, self, from_pos)
+    self[from_pos] = null_piece
     self[to_pos].pos = to_pos
   end
 
@@ -177,7 +179,7 @@ class Board
 
     self[rook_to] = self[rook_from]
     self[rook_to].pos = rook_to
-    self[rook_from] = NullPiece.new(:nil, self, rook_from)
+    self[rook_from] = null_piece
     self[rook_to].can_castle = true # Rook
     move.moved_piece.can_castle = true # King
   end
@@ -193,7 +195,7 @@ class Board
     if @ghost_pawns[color]
       pos = @ghost_pawns[color]
       if self[pos].class == GhostPawn
-        self[pos] = NullPiece.new(:nil, self, pos)
+        self[pos] = null_piece
       end
       @ghost_pawns[color] = nil
     end
@@ -202,7 +204,7 @@ class Board
   def capture_ghost(pos)
     raise "That is not a ghost pawn" unless self[pos].class == GhostPawn
     origin_pos = self[pos].origin
-    self[origin_pos] = NullPiece.new(:nil, self, origin_pos)
+    self[origin_pos] = null_piece
   end
 
   def in_check?(color)
@@ -285,7 +287,7 @@ class Board
     @grid = Array.new(8) { Array.new(8) }
 
     @grid[0..7].map! do |row|
-      row.map! { |cell| cell = NullPiece.new(:nil, self) }
+      row.map! { |cell| cell = null_piece }
     end
 
     if fill

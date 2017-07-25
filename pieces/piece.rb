@@ -57,7 +57,7 @@ class Piece
 
   def check_color(color)
     unless color == :white || color == :black || color == :nil
-    raise ArgumentError "Color must be passed as :nil, :black, or :white."
-  end
+      raise ArgumentError "Color must be passed as :nil, :black, or :white."
+    end
   end
 end
