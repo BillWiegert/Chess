@@ -153,15 +153,38 @@ class SmartAI < Player
     VALUES[piece.class.to_s]
   end
 
+  # def _find_best_move()
+  #   best_score = -99999
+  #   best_move = nil
+  #
+  #   my_pieces().each do |piece|
+  #     piece.valid_moves.each do |move|
+  #       test_board = board.dup
+  #       test_board.move_piece!(piece.pos, move)
+  #       new_score = minimax(1, test_board, false)
+  #
+  #       if new_score > best_score
+  #         best_move = [piece.pos, move]
+  #         best_score = new_score
+  #       end
+  #     end
+  #   end
+  #
+  #   best_move
+  # end
+
   def find_best_move()
+    @pos_count = 0
+    @start_time = Time.now
+
     best_score = -99999
     best_move = nil
 
     my_pieces().each do |piece|
       piece.valid_moves.each do |move|
-        test_board = board.dup
-        test_board.move_piece!(piece.pos, move)
-        new_score = minimax(1, test_board, false)
+        board.move_piece!(piece.pos, move)
+        new_score = minimax(1, board, false, -100000, 100000)
+        board.undo
 
         if new_score > best_score
           best_move = [piece.pos, move]
@@ -170,10 +193,15 @@ class SmartAI < Player
       end
     end
 
+    print "#{@pos_count} in #{Time.now - @start_time}s"
+
+
     best_move
   end
 
-  def minimax(depth, test_board, my_turn)
+  def minimax(depth, test_board, my_turn, alpha, beta)
+    @pos_count += 1
+
     if depth == 0
       return evaluate_position(test_board)
     end
@@ -183,14 +211,18 @@ class SmartAI < Player
 
       my_pieces.each do |piece|
         piece.valid_moves.each do |move|
-          new_board = test_board.dup
-          new_board.move_piece!(piece.pos, move)
+          test_board.move_piece(color, piece.pos, move)
 
-          # test_display = Display.new(new_board)
+          # test_display = Display.new(test_board)
           # system "clear"
           # test_display.render
 
-          best_score = [best_score, minimax(depth - 1, new_board, !my_turn)].max
+          best_score = [best_score, minimax(depth - 1, test_board, !my_turn, alpha, beta)].max
+          test_board.undo
+
+          alpha = [best_score, alpha].max
+
+          return best_score if beta <= alpha
         end
       end
 
@@ -201,14 +233,18 @@ class SmartAI < Player
 
       enemy_pieces.each do |piece|
         piece.valid_moves.each do |move|
-          new_board = test_board.dup
-          new_board.move_piece!(piece.pos, move)
+          test_board.move_piece(opp_color, piece.pos, move)
 
-          # test_display = Display.new(new_board)
+          # test_display = Display.new(test_board)
           # system "clear"
           # test_display.render
 
-          best_score = [best_score, minimax(depth-1, new_board, !my_turn)].min
+          best_score = [best_score, minimax(depth-1, test_board, !my_turn, alpha, beta)].min
+          test_board.undo
+
+          beta = [best_score, beta].min
+
+          return best_score if beta <= alpha
         end
       end
 
@@ -237,3 +273,10 @@ class SmartAI < Player
     piece.color == color ? value : -value
   end
 end
+
+# White move, depth, positions, time, notes
+# c3, 3, 9712, 483s, no a-b, move_piece! and undo
+# c3, 3, 2930, 137s, with a-b, move_piece! and undo, 21.3 pos/s
+# c3, 3, 2930, 170s, with a-b, move_piece and undo, 17.2 pos/s
+# c3, 2, 440, 24.8s, with a-b, move_piece & undo, 17.7 pos/s
+# c3, 2, 440, 12s, with a-b, move_piece & undo, no display, 36 pos/s
