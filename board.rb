@@ -172,9 +172,9 @@ class Board
     rank = move.from[0]
 
     if move.castle? == "O-O-O"
-      rook_to, rook_from = [rank, 0], [rank, 3]
+      rook_from, rook_to = [rank, 0], [rank, 3]
     else
-      rook_to, rook_from = [rank, 7], [rank, 5]
+      rook_from, rook_to = [rank, 7], [rank, 5]
     end
 
     self[rook_to] = self[rook_from]
