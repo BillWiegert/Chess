@@ -157,7 +157,8 @@ class Board
 
   def undo
     move = move_history.pop
-
+    
+    exterminate_ghosts(move.moved_piece.color)
     self[move.from] = move.moved_piece
     self[move.from].pos = move.from
     self[move.to] = move.dest_piece
@@ -172,9 +173,9 @@ class Board
     rank = move.from[0]
 
     if move.castle? == "O-O-O"
-      rook_from, rook_to = [rank, 0], [rank, 3]
+      rook_to, rook_from = [rank, 0], [rank, 3]
     else
-      rook_from, rook_to = [rank, 7], [rank, 5]
+      rook_to, rook_from = [rank, 7], [rank, 5]
     end
 
     self[rook_to] = self[rook_from]
