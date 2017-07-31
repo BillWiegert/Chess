@@ -107,7 +107,10 @@ class Board
     self.move_piece!(from_pos, to_pos)
 
     if piece.class == Rook || piece.class == King
-      piece.can_castle = false if piece.can_castle
+      if piece.can_castle
+        piece.can_castle = false
+        piece.first_move = move_history.length
+      end
     end
 
     # If King moved two spaces move Rook to complete castle
@@ -157,7 +160,14 @@ class Board
 
   def undo
     move = move_history.pop
-    
+
+    if [King, Rook].include?(move.moved_piece.class)
+      if move.moved_piece.first_move == move_history.length + 1
+        move.moved_piece.can_castle = true
+        move.moved_piece.first_move = nil
+      end
+    end
+
     exterminate_ghosts(move.moved_piece.color)
     self[move.from] = move.moved_piece
     self[move.from].pos = move.from

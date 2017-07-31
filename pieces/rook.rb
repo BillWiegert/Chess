@@ -4,11 +4,12 @@ require_relative 'sliding_module'
 class Rook < Piece
   include SlidingPiece
 
-  attr_accessor :can_castle
+  attr_accessor :can_castle, :first_move
 
   def initialize(color, board, pos = nil)
     @symbol = define_symbol("♜")
     @can_castle = true
+    @first_move = nil
     super(color, board, pos)
   end
 
