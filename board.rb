@@ -29,11 +29,11 @@ class Board
   REV_RANKS = RANKS.invert
   REV_FILES = FILES.invert
 
-  attr_accessor :grid, :pending_promotion, :move_history, :ghost_pawns
+  attr_accessor :grid, :move_history, :ghost_pawns
   attr_reader :null_piece
 
   def initialize(fill = true)
-    @pending_promotion = false
+    # @pending_promotion = false
     @ghost_pawns = {
       white: nil,
       black: nil
@@ -104,6 +104,8 @@ class Board
       capture_ghost(to_pos)
     end
 
+    exterminate_ghosts(turn_color)
+
     self.move_piece!(from_pos, to_pos)
 
     if piece.class == Rook || piece.class == King
@@ -129,18 +131,17 @@ class Board
     end
 
     if piece.class == Pawn
-      if piece.promotion_row == to_pos[0]
-        @pending_promotion = true
-      else
-        move_dist = to_pos[0] - from_pos[0]
+      # if piece.promotion_row == to_pos[0]
+      #   @pending_promotion = true
+      # else
+      move_dist = to_pos[0] - from_pos[0]
 
-        if move_dist == -2 || move_dist == 2
-          ghost_pos = [to_pos[0] - move_dist * 0.5, to_pos[1]]
-          ghost = GhostPawn.new(piece.color, self, ghost_pos)
-          ghost.origin = piece.pos
-          self[ghost_pos] = ghost
-          @ghost_pawns[ghost.color] = ghost_pos
-        end
+      if move_dist == -2 || move_dist == 2
+        ghost_pos = [to_pos[0] - move_dist * 0.5, to_pos[1]]
+        ghost = GhostPawn.new(piece.color, self, ghost_pos)
+        ghost.origin = piece.pos
+        self[ghost_pos] = ghost
+        @ghost_pawns[ghost.color] = ghost_pos
       end
     end
   end
@@ -168,10 +169,22 @@ class Board
       end
     end
 
-    exterminate_ghosts(move.moved_piece.color)
     self[move.from] = move.moved_piece
     self[move.from].pos = move.from
     self[move.to] = move.dest_piece
+
+    if move.moved_piece.class == Pawn
+      move_dist = move.to[0] - move.from[0]
+
+      if move_dist == -2 || move_dist == 2
+        exterminate_ghosts(move.moved_piece.color)
+      end
+
+      if move.dest_piece.class == GhostPawn
+        ghost = move.dest_piece
+        self[ghost.origin] = Pawn.new(ghost.color, self, ghost.origin)
+      end
+    end
 
     if move.castle?
       uncastle(move)
@@ -200,6 +213,10 @@ class Board
     self[pos] = piece_type.new(color, self, pos)
     move_history.last.promote_to(piece_type)
     @pending_promotion = false
+  end
+
+  def pending_promotion
+    pieces.any? { |p| p.class == Pawn && p.promotion_row == p.pos[0] }
   end
 
   def exterminate_ghosts(color)
