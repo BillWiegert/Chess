@@ -19,8 +19,6 @@ class Game
   def play
     until board.checkmate?(current_player) || board.stalemate?(current_player)
       begin
-        board.exterminate_ghosts(current_player)
-
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
         display.last_move = board.move_history.last

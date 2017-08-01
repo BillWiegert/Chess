@@ -183,7 +183,7 @@ class SmartAI < Player
     my_pieces().each do |piece|
       piece.valid_moves.each do |move|
         board.move_piece(color, piece.pos, move)
-        new_score = minimax(1, board, false, -100000, 100000)
+        new_score = minimax(2, board, false, -100000, 100000)
         board.undo
 
         if new_score > best_score
